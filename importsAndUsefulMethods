@@ -1,0 +1,46 @@
+#include <Wire.h> //Import necessary for I2C communication
+#include <Servo.h> //import necessary for servos.
+
+Servo servo1;
+Servo servo2;
+int initialAngle = 90; //The initial angle (vertical position) of the servos. Note that this may not be 90.
+int currentAngle;
+int analogPin = A3; //analog pin number that will be used for the pitot static system.
+int initPressure = 0;
+int pressureVal;
+
+void setup() {
+  Serial.begin(120000);           //  setup serial (We need a baud rate of 100,000 - 400,000)
+  //Defining servo signal inputs. Needs to be in the Digital PWM ports on the arduino (3, 5, 6, or 9 usually).
+  servo1.attach(3);
+  servo2.attach(5);
+  currentAngle = initialAngle;
+
+  //For loops test the functionality of the servo's movements;
+  for (currentAngle; currentAngle <= initialAngle + 90; currentAngle++) {
+    servo1.write(currentAngle);
+    servo2.write(currentAngle);
+  }
+  for (currentAngle; currentAngle >= initialAngle; currentAngle--) {
+    servo1.write(currentAngle);
+    servo2.write(currentAngle);
+  }
+  /**
+   * Recieve Analog output from Pitot static system.
+   * Good article on setup and averaging the values:
+   * https://makersportal.com/blog/2019/02/06/arduino-pitot-tube-wind-speed-theory-and-experiment
+   */
+  pressureVal = initPressure;
+
+}
+
+void loop() {
+  /**
+   *  //gets the value for the pressure.Number is an integer between 0 and 1023
+   *  Can go up to as high as 4095 if we convert to 12 bits.
+   *  https://www.arduino.cc/reference/en/language/functions/analog-io/analogread/
+   */
+  pressureVal = analogRead(analogPin); 
+  Serial.println("Pressure: " + pressureVal); //for debugging purposes
+  
+}
