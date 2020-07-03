@@ -1,5 +1,11 @@
 //Imports and instance variables below
 
+#include <Wire.h> //Import necessary for I2C communication
+#include <Servo.h> //import necessary for servos.
+
+Servo servo1;
+Servo servo2;
+
 //VARIABLES:
 //**Ones are placeholders**
 float az;                         //Accelerationin z direction
