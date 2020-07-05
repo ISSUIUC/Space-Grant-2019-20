@@ -14,6 +14,8 @@ void setup() {
   //Defining servo signal inputs. Needs to be in the Digital PWM ports on the arduino (3, 5, 6, or 9 usually).
   servo1.attach(3);
   servo2.attach(5);
+  Wire.begin();                   // join i2c bus
+  Wire.setClock(120000);          //set the clock (in hertz) to the same as the serial transmission.
   currentAngle = initialAngle;
 
   //For loops test the functionality of the servo's movements;
