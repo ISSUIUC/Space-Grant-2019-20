@@ -21,6 +21,11 @@ int free_fall_thresh = 1;         //Minimum negative acceleration for burnout to
 int freefall_time_thresh = 1;     //Amount of time (ms) acceleration must exceed threshold to detect burnout
 float burnout_time = 0;           //First time negaative acceleration exceeding threshold is detected
 float coast_timer = 0;            //Measures length of negative acceleration for free fall time threshold
+float roll_rate;                  //Rate of roatation around the z axis
+int roll_rate_thresh = 1;         //Minimum roll rate for roll control activation
+float alt;                        //Altitude measured from altimeter
+int roll_control_cutoff = 1;      //Altitude at which the rocket switches exclusively to active drag
+bool apogee = false;              //Defines the end of the coast phase when true
 
 void setup() {
   // put your setup code here, to run once:
@@ -53,7 +58,7 @@ void loop() {
   }
 
   //BURNOUT DETECTION LOGIC:
-  if(az < free_fall_thresh && free_fall_init == false)    //If large negative acceleration is observed...
+  if(az < free_fall_thresh && launch == true && free_fall_init == false)    //If large negative acceleration is observed after launch...
   {
     burnout_time = millis();                            //...assume burnout and store time of burnout
     free_fall_init = true;
@@ -69,9 +74,19 @@ void loop() {
      }
   }
 
-  else if(az > free_fall_thresh && launch_init == true && free_fall == false)   //If the negative acceleration was too brief...
+  else if(az > free_fall_thresh && free_fall_init == true && free_fall == false)   //If the negative acceleration was too brief...
   {
     free_fall_init = false;                             //...reset the burnout detection (the acceleration was just an anomaly)
   }
   
+  //ROLL CONTROL
+  if((roll_rate > roll_rate_thresh || roll_rate < -roll_rate_thresh) && alt < roll_control_cutoff && free_fall == true && apogee == false)    //If the rocket is rolling and is in the coast phase below a certain altitude...
+  {
+    //...reduce the roll
+  }
+  //ACTIVE DRAG
+  else if(free_fall == true && apogee == false)         //If the rocket is in the coast phase...
+  {
+    //...run active drag
+  }
 }
