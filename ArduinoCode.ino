@@ -32,6 +32,7 @@ float g = 9.81;                   //Acceleration due to gravity in metres/sec
 float native_drag;                //Native drag force, have to see how to calculate this
 float flaps_drag;                 //Additional drag force due to the deployed flaps
 float m;                          //Mass of the rocket in kilograms
+float buffer;                     //Buffer percentage for active drag system 
 
 void setup() {
   // put your setup code here, to run once:
@@ -93,13 +94,21 @@ void loop() {
   //ACTIVE DRAG
   else if(free_fall == true && apogee == false)         //If the rocket is in the coast phase...
   {
-    //...run active drag
-    //des_vel = f(altitude)
-    float des_vel = sqrt(2*(g+(native_drag/m)*(des_alt-alt)); //From v^2 - u^2 = 2*a*s equation. THe final velocity is zero, u is the desired velocity considering flap drag is applied throughout
-    
-    //to see if the current velocity is greater than the no-flap-deployed-desired velocity
-    
-    
-    
+    //Runs active drag
+    //control_vel = f(altitude)
+    float control_vel = sqrt(2*(g+(native_drag/m)*(des_alt-alt)); //From v^2 - u^2 = 2*a*s equation. THe final velocity is zero, u is the desired velocity considering flap drag isn't applied throughout
+    if (alt > des_alt)
+    {
+      //deploy flaps
+    }
+    else {
+      if (vel > control_vel*(1+buffer/100))
+      {
+        //deploy flaps
+      }
+      else {
+        //go to vertical
+      }
+    } 
   }
 }
