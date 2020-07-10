@@ -26,6 +26,15 @@ int roll_rate_thresh = 1;         //Minimum roll rate for roll control activatio
 float alt;                        //Altitude measured from altimeter
 int roll_control_cutoff = 1;      //Altitude at which the rocket switches exclusively to active drag
 bool apogee = false;              //Defines the end of the coast phase when true
+float vel;                        //Velocity data received from the Pi
+float des_alt;                    //Desired altitude of the flight, either 2345 ft or 3456 ft
+float g = 9.81;                   //Acceleration due to gravity in metres/sec
+float native_drag;                //Native drag force, have to see how to calculate this
+float flaps_drag;                 //Additional drag force due to the deployed flaps
+float m;                          //Mass of the rocket in kilograms
+float buffer;                     //Buffer percentage for active drag system
+float Kp;                         //Proportional Gain for the roll control
+float theta;                      //Angle command to the flaps for roll control
 
 void setup() {
   // put your setup code here, to run once:
@@ -83,10 +92,32 @@ void loop() {
   if((roll_rate > roll_rate_thresh || roll_rate < -roll_rate_thresh) && alt < roll_control_cutoff && free_fall == true && apogee == false)    //If the rocket is rolling and is in the coast phase below a certain altitude...
   {
     //...reduce the roll
+    //Proportional controller to reduce the roll of the rocket. Kp is the proportional gain.
+    roll_err = -roll_rate; //The desired roll rate is 0, so the error in roll rate is -ve roll rate, thus giving the correct direction.
+    theta = Kp*roll_err; //Make sure the Kp accounts for radian-degree conversion!!!
+    
+    myservo1.write(constrain(theta,-15,15)); //offset these for the actual servos angle shift
+    myservo1.write(constrain(theta,-15,15)); //offset these for the actual servos angle shift
+    
   }
   //ACTIVE DRAG
   else if(free_fall == true && apogee == false)         //If the rocket is in the coast phase...
   {
-    //...run active drag
+    //Runs active drag
+    //control_vel = f(altitude)
+    float control_vel = sqrt(2*(g+(native_drag/m)*(des_alt-alt)); //From v^2 - u^2 = 2*a*s equation. THe final velocity is zero, u is the desired velocity considering flap drag isn't applied throughout
+    if (alt > des_alt)
+    {
+      //deploy flaps
+    }
+    else {
+      if (vel > control_vel*(1+buffer/100))
+      {
+        //deploy flaps
+      }
+      else {
+        //go to vertical
+      }
+    } 
   }
 }
