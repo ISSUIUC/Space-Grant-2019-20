@@ -35,9 +35,36 @@ float m;                          //Mass of the rocket in kilograms
 float buffer;                     //Buffer percentage for active drag system
 float Kp;                         //Proportional Gain for the roll control
 float theta;                      //Angle command to the flaps for roll control
+int initialAngle = 90; //The initial angle (vertical position) of the servos. Note that this may not be 90.
+int currentAngle;
+int analogPin = A3; //analog pin number that will be used for the pitot static system.
+int initPressure = 0;
+int pressureVal;
 
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(120000);           //  setup serial (We need a baud rate of 100,000 - 400,000)
+  //Defining servo signal inputs. Needs to be in the Digital PWM ports on the arduino (3, 5, 6, or 9 usually).
+  servo1.attach(3);
+  servo2.attach(5);
+  Wire.begin();                   // join i2c bus
+  Wire.setClock(120000);          //set the clock (in hertz) to the same as the serial transmission.
+  currentAngle = initialAngle;
+
+  //For loops test the functionality of the servo's movements;
+  for (currentAngle; currentAngle <= initialAngle + 90; currentAngle++) {
+    servo1.write(currentAngle);
+    servo2.write(currentAngle);
+  }
+  for (currentAngle; currentAngle >= initialAngle; currentAngle--) {
+    servo1.write(currentAngle);
+    servo2.write(currentAngle);
+  }
+  /**
+   * Recieve Analog output from Pitot static system.
+   * Good article on setup and averaging the values:
+   * https://makersportal.com/blog/2019/02/06/arduino-pitot-tube-wind-speed-theory-and-experiment
+   */
+  pressureVal = initPressure;
 
 }
 
