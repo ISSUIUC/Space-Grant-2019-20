@@ -69,6 +69,15 @@ void setup() {
 }
 
 void loop() {
+  /**
+   *  //gets the value for the pressure.Number is an integer between 0 and 1023
+   *  Can go up to as high as 4095 if we convert to 12 bits.
+   *  https://www.arduino.cc/reference/en/language/functions/analog-io/analogread/
+   */
+  pressureVal = analogRead(analogPin); 
+  Serial.println("Pressure: " + pressureVal); //for debugging purposes
+  
+  
   //az must be updated from sensor each time through loop
   
   //LAUNCH DETECTION LOGIC:
