@@ -7,7 +7,7 @@ Servo servo1;
 Servo servo2;
 
 //VARIABLES:
-//**Ones are placeholders**
+//**Ones are placeholder. Using metric**
 float az;                         //Accelerationin z direction
 bool launch = false;              //Tracks if aruduino has detected launch
 bool launch_init = false;         //True whenever acceleration exceeds threshold
@@ -42,7 +42,7 @@ int initPressure = 0;
 int pressureVal;
 
 void setup() {
-  Serial.begin(120000);           //  setup serial (We need a baud rate of 100,000 - 400,000)
+  Serial.begin(115200);           //  setup serial (We need a baud rate of 100,000 - 400,000)
   //Defining servo signal inputs. Needs to be in the Digital PWM ports on the arduino (3, 5, 6, or 9 usually).
   servo1.attach(3);
   servo2.attach(5);
@@ -74,7 +74,7 @@ void loop() {
    *  Can go up to as high as 4095 if we convert to 12 bits.
    *  https://www.arduino.cc/reference/en/language/functions/analog-io/analogread/
    */
-  pressureVal = analogRead(analogPin); 
+  pressureVal = analogRead(analogPin); //***Need to change into a 2 byte array buffer.***
   Serial.println("Pressure: " + pressureVal); //for debugging purposes
   
   
