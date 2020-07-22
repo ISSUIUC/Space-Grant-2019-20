@@ -76,19 +76,20 @@ void loop() {
     byte rr_byte_array[4];
     byte alt_byte_array[4];
     byte vel_byte_array[4];
-    for(int i = 0; i < 16; i++){
+    for(int i = 15; i >= 0; i--){
       if (i < 4) {
-        az_byte_array[i] = dataBuffer[i];
+        az_byte_array[(15 - i) % 4] = dataBuffer[i]; //we do (15 - i) % 4 because we're reversing index,
+                                                     //Values need to be recieved low byte first in order to use pointer casting
       } else if (i < 8) { 
-        rr_byte_array[i % 4] = dataBuffer[i];
+        rr_byte_array[(15 - i) % 4] = dataBuffer[i];
       } else if (i < 12) {
-        alt_byte_array[i % 4] = dataBuffer[i];
+        alt_byte_array[(15 - i) % 4] = dataBuffer[i];
       } else {
-        vel_byte_array[i % 4] = dataBuffer[i];
+        vel_byte_array[(15 - i) % 4] = dataBuffer[i];
       }
     }
 
-    az = *( (float*) az_byte_array );
+    az = *( (float*) az_byte_array ); 
     roll_rate = *( (float*) rr_byte_array );
     alt = *( (float*) alt_byte_array );
     vel = *( (float*) vel_byte_array );
