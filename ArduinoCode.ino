@@ -69,8 +69,34 @@ void setup() {
 }
 
 void loop() {
+  if (Serial.available() > 0) { //serial.available returns the number of bytes in the serial buffer
+    byte dataBuffer[16];
+    Serial.readBytes(dataBuffer, 16);
+    byte az_byte_array[4];
+    byte rr_byte_array[4];
+    byte alt_byte_array[4];
+    byte vel_byte_array[4];
+    for(int i = 0; i <= 3; i++){
+      az_byte_array[i] = dataBuffer[i];
+    }
+    for(int j = 4; j <= 7; j++){
+      rr_byte_array[j] = dataBuffer[j];
+    }
+    for(int k = 8; k <= 11; k++){
+      alt_byte_array[k] = dataBuffer[k];
+    }
+    for(int m = 12; m <= 15; m++){
+      vel_byte_array[m] = dataBuffer[m];
+    }
+
+    az = *( (float*) az_byte_array ); //pointer typecast method
+    roll_rate = *( (float*) rr_byte_array );
+    alt = *( (float*) alt_byte_array );
+    vel = *( (float*) vel_byte_array );
+  }
+
   /**
-   *  //gets the value for the pressure.Number is an integer between 0 and 1023
+   *  //gets the value for the pressure. Number is an integer between 0 and 1023
    *  Can go up to as high as 4095 if we convert to 12 bits.
    *  https://www.arduino.cc/reference/en/language/functions/analog-io/analogread/
    */
