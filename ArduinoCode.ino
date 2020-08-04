@@ -159,8 +159,8 @@ void loop() {
   {
     //...reduce the roll
     //Proportional controller to reduce the roll of the rocket. Kp is the proportional gain.
-    roll_err = -roll_rate; //The desired roll rate is 0, so the error in roll rate is -ve roll rate, thus giving the correct direction.
-    theta = Kp*roll_err; //Make sure the Kp accounts for radian-degree conversion!!!
+    float roll_err = -roll_rate; //The desired roll rate is 0, so the error in roll rate is -ve roll rate, thus giving the correct direction.
+    float theta = Kp*roll_err; //Make sure the Kp accounts for radian-degree conversion!!!
     
     myservo1.write(constrain(theta,-15,15)); //offset these for the actual servos angle shift
     myservo1.write(constrain(theta,-15,15)); //offset these for the actual servos angle shift
