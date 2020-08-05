@@ -1,3 +1,22 @@
+/**Welcome to Space Grant 2020's Arduino Code. This code's main job is to control the
+actuating flaps on the rocket and thus control the roll by creating a lift using torque,
+and controlling the apogee using an active drag algorithm. It uses a proportional controller
+for the roll and a custom algorithm designed by me for active drag. The gains for the roll
+controller were calculated using a simulink model. This code will go on the onboard Arduino, 
+which will interface with the Raspberry Pi, a pitot tube and the servos. The sensor data
+comes from the Pi.
+
+Written by James Bayus (Pi data collection), Matt Taylor (data transfer),
+James Helmlich (Flight status determination) and Anshuk Chigullapalli (control algorithms).
+Also credit to the Illinois Space Society IREC 2019 team, whose code was used as a basis for 
+setup, structure and the flight status determination. Special thanks to Ayberk Yaraneri and 
+Robert Filipuik for providing their code.
+
+That's all for now. Thanks to those involved!
+--Anshuk Chigullapalli
+**/
+
+
 //Imports and instance variables below
 
 #include <Wire.h> //Import necessary for I2C communication
@@ -162,8 +181,8 @@ void loop() {
     float roll_err = -roll_rate; //The desired roll rate is 0, so the error in roll rate is -ve roll rate, thus giving the correct direction.
     float theta = Kp*roll_err; //Make sure the Kp accounts for radian-degree conversion!!!
     
-    myservo1.write(constrain(theta,-15,15)); //offset these for the actual servos angle shift
-    myservo1.write(constrain(theta,-15,15)); //offset these for the actual servos angle shift
+    servo1.write(constrain(theta,-15,15)); //offset these for the actual servos angle shift
+    servo2.write(constrain(theta,-15,15)); //offset these for the actual servos angle shift
     
   }
   //ACTIVE DRAG
@@ -174,15 +193,15 @@ void loop() {
     float control_vel = sqrt(2*(g+(native_drag/m)*(des_alt-alt)); //From v^2 - u^2 = 2*a*s equation. THe final velocity is zero, u is the desired velocity considering flap drag isn't applied throughout
     if (alt > des_alt)
     {
-      //deploy flaps
+      //deploy flaps DO THIS
     }
     else {
       if (vel > control_vel*(1+buffer/100))
       {
-        //deploy flaps
+        //deploy flaps DO THIS
       }
       else {
-        //go to vertical
+        //go to vertical DO THIS
       }
     } 
   }
