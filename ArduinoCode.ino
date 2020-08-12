@@ -16,11 +16,13 @@ That's all for now. Thanks to those involved!
 --Anshuk Chigullapalli
 **/
 
+
+
 /** Tasks to complete:
  * Check if the initial I2C line is still required
  * Check the angles of the servos after attaching to physical system.
  * After servos are properly configured, finish the active drag code.
- * Finish analog setup to send pitot data to Pi
+ * Test Analog setup between the arduino and the Pi
  * STAGE VARIABLES. Get good values. And also all the stages. Are they correct? Remove unecessary steps.
  * */ 
 
@@ -131,9 +133,16 @@ void loop() {
    *  https://www.arduino.cc/reference/en/language/functions/analog-io/analogread/
    */
   pressureVal = analogRead(analogPin); //***Need to change into a 2 byte array buffer.***
+
+  //This int (only 10 bits have info) is then sent over serial to the Pi after making it a byte array.
+  byte pressureBuffer[2];
+  pressureBuffer[0] = pressureVal; //first 8 bits
+  pressureBuffer[1] = pressureVal >> 8; //Right shift to get next 2 bits
+
+  Serial.write(pressureBuffer, 2); //Sends pitot analog data to the Pi
   Serial.println("Pressure: " + pressureVal); //for debugging purposes
   
-  //Not sure if serial is done. It doesn't seem to be sending any daya to the pi
+  //Test the analog data system!
 
   //az must be updated from sensor each time through loop
   
