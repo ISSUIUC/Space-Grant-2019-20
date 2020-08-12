@@ -16,6 +16,13 @@ That's all for now. Thanks to those involved!
 --Anshuk Chigullapalli
 **/
 
+/** Tasks to complete:
+ * Check if the initial I2C line is still required
+ * Check the angles of the servos after attaching to physical system.
+ * After servos are properly configured, finish the active drag code.
+ * Finish analog setup to send pitot data to Pi
+ * STAGE VARIABLES. Get good values. And also all the stages. Are they correct? Remove unecessary steps.
+ * */ 
 
 //Imports and instance variables below
 
@@ -65,7 +72,7 @@ void setup() {
   //Defining servo signal inputs. Needs to be in the Digital PWM ports on the arduino (3, 5, 6, or 9 usually).
   servo1.attach(3);
   servo2.attach(5);
-  Wire.begin();                   // join i2c bus
+  Wire.begin();                   // join i2c bus...Do we still need this?
   Wire.setClock(120000);          //set the clock (in hertz) to the same as the serial transmission.
   currentAngle = initialAngle;
 
@@ -126,7 +133,8 @@ void loop() {
   pressureVal = analogRead(analogPin); //***Need to change into a 2 byte array buffer.***
   Serial.println("Pressure: " + pressureVal); //for debugging purposes
   
-  
+  //Not sure if serial is done. It doesn't seem to be sending any daya to the pi
+
   //az must be updated from sensor each time through loop
   
   //LAUNCH DETECTION LOGIC:
