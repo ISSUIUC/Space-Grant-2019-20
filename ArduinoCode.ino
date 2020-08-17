@@ -137,8 +137,8 @@ void loop() {
 
   //This int (only 10 bits have info) is then sent over serial to the Pi after making it a byte array.
   byte pressureBuffer[2];
-  pressureBuffer[0] = pressureVal; //first 8 bits
-  pressureBuffer[1] = pressureVal >> 8; //Right shift to get next 2 bits
+  pressureBuffer[1] = pressureVal; //first 8 bits
+  pressureBuffer[0] = pressureVal >> 8; //Right shift to get next 2 bits
 
   Serial.write(pressureBuffer, 2); //Sends pitot analog data to the Pi
   //Serial.println("Pressure: " + pressureVal); //for debugging purposes
