@@ -141,7 +141,7 @@ void loop() {
   pressureBuffer[1] = pressureVal >> 8; //Right shift to get next 2 bits
 
   Serial.write(pressureBuffer, 2); //Sends pitot analog data to the Pi
-  Serial.println("Pressure: " + pressureVal); //for debugging purposes
+  //Serial.println("Pressure: " + pressureVal); //for debugging purposes
   
   //Test the analog data system!
 
@@ -160,7 +160,7 @@ void loop() {
     if(burn_timer > launch_time_thresh)                 //If the acceleration lasts long enough...
     {
       launch = true;                                    //...the launch has occured
-      Serial.println(String(millis()/1000) + "s: Launch detected");
+      //Serial.println(String(millis()/1000) + "s: Launch detected");
     }
   }
   
@@ -182,7 +182,7 @@ void loop() {
      if(coast_timer > freefall_time_thresh)             //If the negative acceleration lasts long enough...  
      {
       free_fall = true;                                 //...burnout has occured, and the rocket is now coasting
-      Serial.println(String(millis()/1000) + "s: Burnout detected");
+      //Serial.println(String(millis()/1000) + "s: Burnout detected");
      }
   }
 
@@ -208,7 +208,7 @@ void loop() {
   {
     //Runs active drag
     //control_vel = f(altitude)
-    float control_vel = sqrt(2*(g+(native_drag/m)*(des_alt-alt)); //From v^2 - u^2 = 2*a*s equation. THe final velocity is zero, u is the desired velocity considering flap drag isn't applied throughout
+    float control_vel = sqrt(2*(g+(native_drag/m)*(des_alt-alt))); //From v^2 - u^2 = 2*a*s equation. THe final velocity is zero, u is the desired velocity considering flap drag isn't applied throughout
     if (alt > des_alt)
     {
       //deploy flaps DO THIS
