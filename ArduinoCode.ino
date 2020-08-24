@@ -24,7 +24,9 @@ That's all for now. Thanks to those involved!
  * After servos are properly configured, finish the active drag code.
  * Test Analog setup between the arduino and the Pi
  * STAGE VARIABLES. Get good values. And also all the stages. Are they correct? Remove unecessary steps.
- * Some of the sections use the apogee variable, but there is no apogee determination code
+ * CONSTANTS such as as mass, Kp, the buffer variable and desired altitude have to be given.
+ * Make two separate files for each of the flights.
+ * Some of the sections use the apogee variable, but there is no apogee determination code.
  * */ 
 
 //Imports and instance variables below
