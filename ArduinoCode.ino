@@ -19,14 +19,14 @@ That's all for now. Thanks to those involved!
 
 
 /** Tasks to complete:
- * Check if the initial I2C line is still required
  * Check the angles of the servos after attaching to physical system.
  * After servos are properly configured, finish the active drag code.
- * Test Analog setup between the arduino and the Pi
+ * Limit the code time to 10 Hz. Do this later.
  * STAGE VARIABLES. Get good values. And also all the stages. Are they correct? Remove unecessary steps.
+ * Get az thresholds from OpenRocket data. Anshuk is doing that.
  * CONSTANTS such as as mass, Kp, the buffer variable and desired altitude have to be given.
  * Make two separate files for each of the flights.
- * Some of the sections use the apogee variable, but there is no apogee determination code.
+ * Some of the sections use the apogee variable, but there is no apogee determination code. Jim is doing that.
  * */ 
 
 //Imports and instance variables below
@@ -43,13 +43,13 @@ float az;                         //Accelerationin z direction
 bool launch = false;              //Tracks if aruduino has detected launch
 bool launch_init = false;         //True whenever acceleration exceeds threshold
 int launch_az_thresh = 1;         //Minimum acceleration for launch to be detected
-int launch_time_thresh = 1;       //Amount of time (ms) acceleration must exceed threshold to detect launch
+int launch_time_thresh = 300;     //Amount of time (ms) acceleration must exceed threshold to detect launch
 float launch_time = 0;            //First time acceleration above launch threshold is detected
 float burn_timer = 0;             //Measures length of burrn for launch time threshold
 bool free_fall = false;           //Tracks if rocket is past burnout
 bool free_fall_init = false;      //True whenever negative acceleration exceeds threshold after launch
 int free_fall_thresh = 1;         //Minimum negative acceleration for burnout to be detected **should be negative**
-int freefall_time_thresh = 1;     //Amount of time (ms) acceleration must exceed threshold to detect burnout
+int freefall_time_thresh = 200;   //Amount of time (ms) acceleration must exceed threshold to detect burnout
 float burnout_time = 0;           //First time negaative acceleration exceeding threshold is detected
 float coast_timer = 0;            //Measures length of negative acceleration for free fall time threshold
 float roll_rate;                  //Rate of roatation around the z axis
@@ -73,12 +73,10 @@ int initPressure = 0;
 int pressureVal;
 
 void setup() {
-  Serial.begin(115200);           //  setup serial (We need a baud rate of 100,000 - 400,000)
+  Serial.begin(115200);           //  setup serial (We need a baud rate of 100,000 - 115,200)
   //Defining servo signal inputs. Needs to be in the Digital PWM ports on the arduino (3, 5, 6, or 9 usually).
   servo1.attach(3);
   servo2.attach(5);
-  Wire.begin();                   // join i2c bus...Do we still need this?
-  Wire.setClock(120000);          //set the clock (in hertz) to the same as the serial transmission.
   currentAngle = initialAngle;
 
   //For loops test the functionality of the servo's movements;
@@ -100,6 +98,9 @@ void setup() {
 }
 
 void loop() {
+
+  float old_alt = alt //To store the previous altitude for apogee purposes
+
   if (Serial.available() > 0) { //serial.available returns the number of bytes in the serial buffer
     byte dataBuffer[16];
     Serial.readBytes(dataBuffer, 16);
