@@ -72,6 +72,7 @@ int analogPin = A3; //analog pin number that will be used for the pitot static s
 int initPressure = 0;
 int pressureVal;
 
+
 void setup() {
   Serial.begin(115200);           //  setup serial (We need a baud rate of 100,000 - 115,200)
   //Defining servo signal inputs. Needs to be in the Digital PWM ports on the arduino (3, 5, 6, or 9 usually).
@@ -98,7 +99,7 @@ void setup() {
 }
 
 void loop() {
-
+  unsigned long currentTime = millis(); //The current starting time in ms of the loop
   float old_alt = alt //To store the previous altitude for apogee purposes
 
   if (Serial.available() > 0) { //serial.available returns the number of bytes in the serial buffer
@@ -226,4 +227,6 @@ void loop() {
       }
     } 
   }
+  unsigned long loopRuntime = millis() - startTime; //The total runtime in ms of the current loop
+  delay(100 - loopRuntime); // make the loop run every 100 ms (10 hz)
 }
