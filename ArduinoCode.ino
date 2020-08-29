@@ -21,12 +21,10 @@ That's all for now. Thanks to those involved!
 /** Tasks to complete:
  * Check the angles of the servos after attaching to physical system.
  * After servos are properly configured, finish the active drag code.
- * Limit the code time to 10 Hz. Do this later.
  * STAGE VARIABLES. Get good values. And also all the stages. Are they correct? Remove unecessary steps.
  * Get az thresholds from OpenRocket data. Anshuk is doing that.
  * CONSTANTS such as as mass, Kp, the buffer variable and desired altitude have to be given.
  * Make two separate files for each of the flights.
- * Some of the sections use the apogee variable, but there is no apogee determination code. Jim is doing that.
  * */ 
 
 //Imports and instance variables below
@@ -50,7 +48,7 @@ bool free_fall = false;           //Tracks if rocket is past burnout
 bool free_fall_init = false;      //True whenever negative acceleration exceeds threshold after launch
 int free_fall_thresh = 1;         //Minimum negative acceleration for burnout to be detected **should be negative**
 int freefall_time_thresh = 200;   //Amount of time (ms) acceleration must exceed threshold to detect burnout
-float burnout_time = 0;           //First time negaative acceleration exceeding threshold is detected
+float burnout_time = 0;           //First time negative acceleration exceeding threshold is detected
 float coast_timer = 0;            //Measures length of negative acceleration for free fall time threshold
 float roll_rate;                  //Rate of roatation around the z axis
 int roll_rate_thresh = 1;         //Minimum roll rate for roll control activation
@@ -75,6 +73,7 @@ int currentAngle;
 int analogPin = A3; //analog pin number that will be used for the pitot static system.
 int initPressure = 0;
 int pressureVal;
+
 
 void setup() {
   Serial.begin(115200);           //  setup serial (We need a baud rate of 100,000 - 115,200)
@@ -102,7 +101,7 @@ void setup() {
 }
 
 void loop() {
-
+  unsigned long startTime = millis(); //The current starting time in ms of the loop
   float old_alt = alt //To store the previous altitude for apogee purposes
 
   if (Serial.available() > 0) { //serial.available returns the number of bytes in the serial buffer
@@ -249,4 +248,6 @@ void loop() {
       }
     } 
   }
+  unsigned long loopRuntime = millis() - startTime; //The total runtime in ms of the current loop
+  delay(100 - loopRuntime); // make the loop run every 100 ms (10 hz)
 }
