@@ -57,6 +57,10 @@ int roll_rate_thresh = 1;         //Minimum roll rate for roll control activatio
 float alt;                        //Altitude measured from altimeter
 int roll_control_cutoff = 1;      //Altitude at which the rocket switches exclusively to active drag
 bool apogee = false;              //Defines the end of the coast phase when true
+bool apogee_init = false;         //True whenever current altitude is less than previous measured altitude
+float apogee_time = 0;            //First time altitude is detectad as decreasing
+int apogee_time_thresh = 200;     //Amount of time rocket must descend for apogee to be detected
+float descent_timer = 0;          //Measures length of descent for apogee time threshold
 float vel;                        //Velocity data received from the Pi
 float des_alt;                    //Desired altitude of the flight, either 2345 ft or 3456 ft
 float g = 9.81;                   //Acceleration due to gravity in metres/sec
@@ -192,6 +196,25 @@ void loop() {
   else if(az > free_fall_thresh && free_fall_init == true && free_fall == false)   //If the negative acceleration was too brief...
   {
     free_fall_init = false;                             //...reset the burnout detection (the acceleration was just an anomaly)
+  }
+  
+  //APOGEE DETECTION LOGIC:
+  if(alt < old_alt && free_fall == true && apogee_init == false)    //If altitude is decreasing during free fall...      
+  {
+    apogee_time = millis();                             //...assume apogee and store time of apogee
+    apogee_init = true;
+  }
+  if(alt < old_alt && apogee_init == true && apogee == false)       //If descent continues...
+  {
+    descent_timer = millis() - apogee_time;             //...start measuring time since apogee
+    if(descent_timer > apogee_time_thresh)              //If time since apogee exceeds a threshold...
+    {
+      apogee = true;                                    //...apogee has occured
+    }
+  }
+  else if(alt > old_alt && apogee_init == true && apogee == false)  //If altitude starts increasing again...
+  {
+    apogee_init == false;                               //...reset the apogee detection
   }
   
   //ROLL CONTROL
